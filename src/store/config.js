@@ -1,0 +1,1 @@
+export const APPNAME = "App Name"; // app名字
