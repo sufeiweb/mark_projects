@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # mark_project
 
 > A Vue.js project
@@ -19,3 +20,6 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# mark_projects
+>>>>>>> 655fe13d1a41db4d6d29b943f1b3fd6300946fd3
