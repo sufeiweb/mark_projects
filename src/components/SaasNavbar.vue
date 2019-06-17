@@ -93,7 +93,20 @@ export default {
       this.$router.history.current &&
       this.$router.history.current.path
     ) {
+      if (this.$router.history.current.path.indexOf("apply/task") > -1) {
+        this.initPath = "/admin/apply/task";
+        return
+      }
       this.initPath = this.$router.history.current.path;
+    }
+  },
+  watch: {
+    $route(to, from) {
+      if (to.path.indexOf("apply/task") > -1) {
+        this.initPath = "/admin/apply/task";
+        return
+      }
+      this.initPath = to.path;
     }
   }
 };

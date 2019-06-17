@@ -190,6 +190,10 @@ export default {
   height: 178px;
   display: block;
 }
+.demo-ruleForm {
+  min-width: 640px;
+  width: 80%;
+}
 </style>
 
 

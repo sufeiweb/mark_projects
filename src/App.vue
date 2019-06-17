@@ -2,6 +2,7 @@
   <div id="app">
     <SaasNavbar/>
     <div class="app_content">
+      <div class="app_content_header"></div>
       <router-view/>
     </div>
   </div>
@@ -30,7 +31,7 @@ body {
   flex: 1;
   height: 100%;
   box-sizing: border-box;
-  padding: 20px;
+  overflow-y: auto;
 }
 a,
 img {
@@ -45,7 +46,13 @@ a {
   padding: 0;
 }
 .layout {
-  height: 100%;
+  height: calc(100% - 60px);
+  padding: 20px;
   overflow: auto;
+  box-sizing: border-box;
+}
+.app_content_header {
+  height: 60px;
+  box-shadow: 0 0 8px rgb(84, 92, 100);
 }
 </style>
