@@ -3,40 +3,25 @@ export default {
   appName(state) {
     return state.appName;
   },
+  PriceUrl(state) {
+    return state.PriceUrl;
+  },
   getLoanStatus(state) {
     return state.getLoanStatus;
   },
   getMeStatus(state) {
     return state.getMeStatus;
   },
-  CONTACTTYPE(state) {
-    return state.CONTACTTYPE;
+  BillType(state) {
+    return state.billType;
   },
-  Province(state) {
-    return state.Province;
+  TaskType(state) {
+    return state.taskType;
   },
-  EDUCATION(state) {
-    return state.EDUCATION;
+  AppName(state){
+    return state.AppName;
   },
-  MARRYSTATUS(state) {
-    return state.MARRYSTATUS;
-  },
-  CHILDRENNUM(state) {
-    return state.CHILDRENNUM;
-  },
-  JOBTYPE(state) {
-    return state.JOBTYPE;
-  },
-  RESIDENCEDURATION(state) {
-    return state.RESIDENCEDURATION;
-  },
-  SALARYTYPE(state) {
-    return state.SALARYTYPE;
-  },
-  GENDER(state) {
-    return state.GENDER;
-  },
-  CITY(state) {
-    return state.CITY;
-  },
+  LoginStatus(state){
+    return state.loginStatus;
+  }
 }

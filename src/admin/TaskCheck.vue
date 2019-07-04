@@ -2,20 +2,21 @@
   <div class="apply_task_main layout">
     <div class="apply_task_main_from">
       <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
-        <el-form-item label="姓名" prop="username">
-          <el-input v-model="formInline.username" placeholder="姓名"></el-input>
+        <el-form-item label="姓名" prop="searchkey">
+          <el-input v-model="formInline.searchkey" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item label="性别" prop="usergender">
-          <el-select v-model="formInline.usergender" placeholder="请选择性别">
+        <el-form-item label="性别" prop="sex">
+          <el-select v-model="formInline.sex" placeholder="请选择性别">
+            <el-option label="不限制" value="0"></el-option>
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="formInline.status" placeholder="请选择状态">
-            <el-option label="待处理" value="1"></el-option>
-            <el-option label="已接受" value="2"></el-option>
-            <el-option label="已拒绝" value="3"></el-option>
+            <el-option label="待审核" value="0"></el-option>
+            <el-option label="已接受" value="1"></el-option>
+            <el-option label="已拒绝" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -67,7 +68,7 @@
         <el-table-column label="联系电话" prop="phoneNumber" width="120"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <span>{{scope.row.status | applyStatus}}</span>
+            <span>{{scope.row.status | ApplyStatus}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
@@ -94,300 +95,30 @@
         background
         layout="prev, pager, next"
         :current-page="pageInfo.currentPage"
-        :total="pageInfo.totalNum"
+        :total="pageInfo.totalRecords"
         @current-change="changePage"
       ></el-pagination>
     </div>
   </div>
 </template>
 <script>
+import {
+  apiAllTaskApplyList,
+  apiAlongTaskApplyList,
+  apiGetTaskDetail
+} from "../fetch/AdminApi";
 export default {
   data() {
     return {
       applyId: undefined,
       formInline: {},
       applyList: [],
-      taskHeader: {
-        taskName: "迪拜收垃圾",
-        startTime: 1560395075423,
-        endTime: 1560481493046,
-        taskAdress: "迪拜阿联酋诸岛",
-        applyList: [
-          {
-            id: 1,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 1
-          },
-          {
-            id: 2,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 2
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 4,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 5,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 6,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 7,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 8,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 9,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 10,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          },
-          {
-            id: 3,
-            name: "张三",
-            gender: "男",
-            age: 25,
-            professional: "未知",
-            phoneNumber: 18812345678,
-            status: 3
-          }
-        ]
-      },
+      taskHeader: {},
       pageInfo: {
-        totalNum: 200,
-        currentPage: 5
+        currentPage: 0, //-- 当前页数
+        totalPage: 0, //-- 总页数
+        pageSize: 10, //-- 单页记录数量
+        totalRecords: 0 //-- 总记录条数
       },
       multipleSelection: []
     };
@@ -395,13 +126,15 @@ export default {
   mounted() {
     // 根据是否有id 来判断 业务类型 加载全部还是加载部分
     this.applyId = this.$route.params.id;
+    this.getTaskApplyList(0, this.$route.params.id);
   },
   methods: {
     submitForm(formName) {
-      console.log("submit!");
+      this.getTaskApplyList(0, this.applyId);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.getTaskApplyList(0, this.applyId);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -415,7 +148,47 @@ export default {
       console.log(status, id, type);
     },
     changePage(e) {
-      console.log(e);
+      this.getTaskApplyList(e, this.applyId);
+    },
+    getTaskApplyList(page, id) {
+      let { formInline, pageInfo } = this;
+      let data = {
+        ...formInline,
+        page: page || pageInfo.currentPage,
+        size: pageInfo.pageSize,
+        taskId: id
+      };
+      if (!id) {
+        apiAllTaskApplyList(data).then(res => {
+          if (res.data.code === "100") {
+            this.applyList = res.data.content;
+          } else {
+            this.$message.error(res.data.description);
+          }
+        });
+      } else {
+        apiGetTaskDetail(id).then(res => {
+          if (res.data.code === "100") {
+            let params = {
+              taskName: res.data.content.title,
+              startTime: res.data.content.startTime,
+              endTime: res.data.content.endTime,
+              taskAdress: res.data.content.address
+            };
+            this.taskHeader = params;
+          }
+        });
+        apiAlongTaskApplyList(data).then(res => {
+          if (res.data.code === "100") {
+            this.taskHeader = {
+              ...this.taskHeader,
+              applyList: res.data.content
+            };
+          } else {
+            this.$message.error(res.data.description);
+          }
+        });
+      }
     }
   }
 };

@@ -7,30 +7,30 @@
       label-width="240px"
       class="task_edit_main_editTask"
     >
-      <el-form-item label="名称" prop="taskName">
-        <el-input v-model="editTask.taskName" placeholder="请输入任务名称" type="text"></el-input>
+      <el-form-item label="名称" prop="title">
+        <el-input v-model="editTask.title" placeholder="请输入任务名称" type="text"></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="taskType">
         <el-select v-model="editTask.taskType">
-          <el-option label="所有行业" value="0"></el-option>
-          <el-option label="保姆" value="1"></el-option>
-          <el-option label="促销员" value="2"></el-option>
-          <el-option label="发传单" value="3"></el-option>
+          <el-option v-for="item in TaskType" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="单价" required>
         <el-col :span="10">
-          <el-form-item prop="taskPrice">
-            <el-input v-model="editTask.taskPrice" placeholder="请输入任务价格" type="number"></el-input>
+          <el-form-item prop="price">
+            <el-input v-model="editTask.price" placeholder="请输入任务价格" type="number"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="2" class="marginLeft10">元</el-col>
         <el-col :span="10">
-          <el-form-item prop="taskPriiceType">
-            <el-select v-model="editTask.taskPriiceType">
-              <el-option label="天" value="day"></el-option>
-              <el-option label="小时" value="hour"></el-option>
-              <el-option label="次" value="once"></el-option>
+          <el-form-item prop="billType">
+            <el-select v-model="editTask.billType">
+              <el-option
+                v-for="item in BillType"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -43,6 +43,7 @@
               placeholder="选择开始时间"
               v-model="editTask.startTime"
               style="width: 100%;"
+              format="yyyy-MM-dd HH:mm:ss"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -54,25 +55,26 @@
               placeholder="选择结束时间"
               v-model="editTask.endTime"
               style="width: 100%;"
+              format="yyyy-MM-dd HH:mm:ss"
             ></el-date-picker>
           </el-form-item>
         </el-col>
       </el-form-item>
       <el-form-item label="地点" required>
         <div>
-          <el-radio-group v-model="editTask.taskAdressType">
-            <el-radio label="FIXED">固定</el-radio>
-            <el-radio label="NULL">不限制</el-radio>
+          <el-radio-group v-model="editTask.limitAddress">
+            <el-radio :label="true">限制</el-radio>
+            <el-radio :label="false">不限制</el-radio>
           </el-radio-group>
         </div>
-        <div v-show="editTask.taskAdressType==='FIXED'">
+        <div v-show="editTask.limitAddress">
           <div id="all">
             <el-input
               type="text"
               id="suggestId"
-              name="address_detail"
+              name="address"
               placeholder="地址"
-              v-model="address_detail"
+              v-model="address"
               class="input_style"
             ></el-input>
             <div id="allmap"></div>
@@ -83,42 +85,37 @@
         <div>
           <el-radio-group v-model="editTask.taskPersonType">
             <el-radio label="FIXED">固定</el-radio>
-            <el-radio label="NULL">不限制</el-radio>
+            <el-radio label="-1">不限制</el-radio>
           </el-radio-group>
         </div>
-        <div v-show="editTask.taskPersonType==='FIXED'">
+        <div v-show="editTask.taskPersonType === 'FIXED'">
           <el-col :span="10">
-            <el-form-item prop="taskPesonNum">
-              <el-input v-model="editTask.taskPesonNum" placeholder="请输入所需的人数" type="number"></el-input>
+            <el-form-item prop="totalPeople">
+              <el-input v-model="editTask.totalPeople" placeholder="请输入所需的人数" type="number"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="2" class="marginLeft10">人</el-col>
         </div>
       </el-form-item>
       <el-form-item label="性别要求" required>
-        <el-radio-group v-model="editTask.taskGender">
-          <el-radio label="NULL">无</el-radio>
-          <el-radio label="WOMAN">女</el-radio>
-          <el-radio label="MAN">男</el-radio>
+        <el-radio-group v-model="editTask.sex">
+          <el-radio :label="0">无限制</el-radio>
+          <el-radio :label="2">女</el-radio>
+          <el-radio :label="1">男</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="任务内容" prop="taskContent">
+      <el-form-item label="任务内容" prop="detail">
         <quill-editor
-          v-model="editTask.taskContent"
-          ref="taskContentEditor"
+          v-model="editTask.detail"
+          ref="detailEditor"
           :options="editorOption"
+          class="detailEditor"
         ></quill-editor>
       </el-form-item>
-      <el-form-item label="申请自动接收申请人报名" required>
-        <el-radio-group v-model="editTask.taskApplyType">
-          <el-radio label="YES">是</el-radio>
-          <el-radio label="NO">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="状态" required>
-        <el-radio-group v-model="editTask.taskStatus">
-          <el-radio label="0">草稿</el-radio>
-          <el-radio label="1">发布</el-radio>
+      <el-form-item label="是否自动接受申请人报名" required>
+        <el-radio-group v-model="editTask.autoPass">
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -129,29 +126,42 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { outTaskData } from "../utils/util";
+import {
+  apiCreateTask,
+  apiGetTaskDetail,
+  apiUpdateTaskDetail
+} from "../fetch/AdminApi";
 export default {
   data() {
     return {
       editTask: {
-        taskPriiceType: "day",
-        taskAdressType: "FIXED",
+        billType: 5,
+        limitAddress: true,
         taskPersonType: "FIXED",
-        taskType: "0",
-        taskGender: "NULL",
-        taskApplyType: "NO",
-        taskStatus: "0",
-        taskContent: "<p>hello world</p>"
+        taskType: 1,
+        sex: 0,
+        autoPass: false,
+        taskStatus: 0,
+        detail: ""
       },
       editorOption: {
-        // sometion config
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // toggled buttons
+            ["blockquote", "code-block", "image"]
+            // [{ color: [] }, { background: {} }]
+          ]
+        }
       },
-      address_detail: "武汉市武汉火车站",
+      address: "上海市上海虹桥火车站",
       userLocation: { lng: "", lat: "" },
       rules: {
-        taskContent: [
-          { required: true, message: "请输入任务名称", trigger: "change" }
+        detail: [
+          { required: true, message: "请输入任务详情", trigger: "change" }
         ],
-        taskName: [
+        title: [
           { required: true, message: "请输入任务名称", trigger: "change" },
           {
             min: 1,
@@ -160,10 +170,10 @@ export default {
             trigger: "change"
           }
         ],
-        taskPrice: [
+        price: [
           { required: true, message: "请输入任务单价", trigger: "change" }
         ],
-        taskPriiceType: [
+        billType: [
           { required: true, message: "请选择单价类型", trigger: "change" }
         ],
         taskType: [
@@ -190,14 +200,16 @@ export default {
   },
   mounted() {
     let _this = this;
+    let { type, id } = this.$route.params;
+    this.getTaskDetail(id);
     this.$nextTick(function() {
       var th = this;
       // 创建Map实例
       var map = new BMap.Map("allmap");
       // 初始化地图,设置中心点坐标，
       var point;
-      if (_this.address_detail) {
-        setPlace(_this.address_detail);
+      if (_this.address) {
+        setPlace(_this.address);
       } else {
         var geolocation = new BMap.Geolocation();
         geolocation.getCurrentPosition(function(r) {
@@ -219,7 +231,7 @@ export default {
       var myValue;
       //鼠标点击下拉列表后的事件
       setTimeout(function() {
-        document.getElementById("suggestId").value = _this.address_detail;
+        document.getElementById("suggestId").value = _this.address;
       }, 0);
       ac.addEventListener("onconfirm", function(e) {
         var _value = e.item.value;
@@ -232,12 +244,14 @@ export default {
         setPlace(myValue);
       });
       function setPlace(localAdress) {
-        _this.address_detail = localAdress;
+        _this.address = localAdress;
         //清除地图上所有覆盖物
         map.clearOverlays();
         function myFun() {
           //获取第一个智能搜索的结果
           th.userlocation = local.getResults().getPoi(0).point;
+          _this.editTask.latitude = th.userlocation.lat;
+          _this.editTask.longitude = th.userlocation.lng;
           map.centerAndZoom(th.userlocation, 18);
           //添加标注
           map.addOverlay(new BMap.Marker(th.userlocation));
@@ -252,27 +266,31 @@ export default {
         //测试输出坐标（指的是输入框最后确定地点的经纬度）
         map.addEventListener("click", function(e) {
           //经度
-          console.log(e);
-          console.log(th.userlocation.lng);
-          //维度
-          console.log(th.userlocation.lat);
+          _this.editTask.latitude = th.userlocation.lat;
+          _this.editTask.longitude = th.userlocation.lng;
         });
       }
     });
-    let { type, id } = this.$route.params;
-    this.getTaskDetail(id);
   },
   methods: {
     getTaskDetail(id) {
       // 获取 task detail
       if (!id) return;
-      console.log("获取task detail");
+      apiGetTaskDetail(id)
+        .then(res => {
+          if (res.data.code === "100") {
+            this.editTask = outTaskData(res.data.content);
+            this.address = this.editTask.address;
+          } else {
+            this.$message.error(res.data.description);
+          }
+        })
     },
     geolocationAdress(lng, lat) {
       // var
     },
     cancelBtnFun() {
-      this.$confirm("此操作将会是表单数据重置, 是否继续?", "提示", {
+      this.$confirm("此操作将会使表单数据重置, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -287,14 +305,26 @@ export default {
           });
         });
     },
+    taskSubmit(editTask) {
+      let { type } = this.$route.params;
+      return type === "update"
+        ? apiUpdateTaskDetail(editTask)
+        : apiCreateTask(editTask);
+    },
     submitForm(formName) {
-      console.log(this.editTask)
+      let { editTask, address } = this;
+      editTask.address = address;
       // 这个地方需要校验 地点，任务需要人数字段，不能通过表单规则去校验
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // alert("submit!");
+          this.taskSubmit(editTask)
+            .then(res => {
+              if (res.data.code === "100") {
+                this.$message.success("创建成功");
+                this.$router.go(-1);
+              }
+            })
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -302,8 +332,9 @@ export default {
   },
   computed: {
     editor() {
-      return this.$refs.taskContentEditor.quillEditor;
-    }
+      return this.$refs.detailEditor.quillEditor;
+    },
+    ...mapGetters(["BillType", "TaskType"])
   }
 };
 </script>

@@ -9,3 +9,6 @@ export const COUNTDOWNSTATE_FALSE = 'COUNTDOWNSTATE_FALSE';//倒计时结束
 
 export const CHANGE_TOOLBAR = 'CHANGE_TOOLBAR';//切换底部菜单栏
 export const SAVE_CONSTANT = 'SAVE_CONSTANT';//存储静态数据
+
+export const SAVE_TASK_BILL = 'SAVE_TASK_BILL'; // 保存常量数据
+export const LOGIN_STATUS = 'LOGIN_STATUS'; // 登录

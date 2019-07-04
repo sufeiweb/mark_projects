@@ -8,7 +8,7 @@
       ref="formLabelAlign"
       class="demo-ruleForm"
     >
-      <el-form-item label="企业Logo" prop="companyLogo">
+      <el-form-item v-if="false" label="企业Logo" prop="companyLogo">
         <el-upload
           class="avatar-uploader"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -23,44 +23,45 @@
       <el-form-item label="企业名称" prop="companyName">
         <el-input v-model="formLabelAlign.companyName"></el-input>
       </el-form-item>
-      <el-form-item label="企业网址" prop="companyNet">
-        <el-input v-model="formLabelAlign.companyNet"></el-input>
+      <el-form-item label="企业网址" prop="companySite">
+        <el-input v-model="formLabelAlign.companySite"></el-input>
       </el-form-item>
       <el-form-item label="企业电话" prop="companyPhone">
-        <el-input type="companyPhone" v-model.number="formLabelAlign.companyPhone"></el-input>
+        <el-input v-model="formLabelAlign.companyPhone"></el-input>
       </el-form-item>
       <el-form-item label="企业邮箱" prop="companyEmail">
         <el-input v-model="formLabelAlign.companyEmail"></el-input>
       </el-form-item>
-      <el-form-item label="企业地址" prop="companyAdress">
-        <el-input v-model="formLabelAlign.companyAdress"></el-input>
+      <el-form-item label="企业地址" prop="companyAddress">
+        <el-input v-model="formLabelAlign.companyAddress"></el-input>
       </el-form-item>
-      <el-form-item label="企业法人" prop="companyLegal">
-        <el-input v-model="formLabelAlign.companyLegal"></el-input>
+      <el-form-item label="企业法人" prop="owner">
+        <el-input v-model="formLabelAlign.owner"></el-input>
       </el-form-item>
-      <el-form-item label="统一社会信用代码" prop="companyCode">
-        <el-input v-model="formLabelAlign.companyCode"></el-input>
+      <el-form-item label="统一社会信用代码" prop="socialCreditCode">
+        <el-input v-model="formLabelAlign.socialCreditCode"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('formLabelAlign')">重置</el-button>
-        <el-button type="primary" @click="submitForm('formLabelAlign')">立即创建</el-button>
+        <el-button @click="resetForm('formLabelAlign')">重置数据</el-button>
+        <el-button type="primary" @click="submitForm('formLabelAlign')">更新企业信息</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+import { apiGetCompanyInfo, apiUpdateCompanyInfo } from "../fetch/AdminApi";
 export default {
   data() {
     return {
       formLabelAlign: {
         companyName: undefined,
-        companyNet: undefined,
+        companySite: undefined,
         companyPhone: undefined,
         companyEmail: undefined,
-        companyAdress: undefined,
-        companyLegal: undefined,
-        companyCode: undefined,
-        companyLogo: undefined
+        companyAddress: undefined,
+        owner: undefined,
+        socialCreditCode: undefined
+        // companyLogo: undefined
       },
       rules: {
         companyLogo: [
@@ -83,7 +84,7 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        companyNet: [
+        companySite: [
           {
             required: true,
             message: "请输入企业网址",
@@ -94,11 +95,6 @@ export default {
           {
             required: true,
             message: "请输入企业电话",
-            trigger: ["blur", "change"]
-          },
-          {
-            type: "number",
-            message: "企业电话应为数字值",
             trigger: ["blur", "change"]
           }
         ],
@@ -114,21 +110,21 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        companyAdress: [
+        companyAddress: [
           {
             required: true,
             message: "请输入企业地址",
             trigger: ["blur", "change"]
           }
         ],
-        companyLegal: [
+        owner: [
           {
             required: true,
             message: "请输入企业法人",
             trigger: ["blur", "change"]
           }
         ],
-        companyCode: [
+        socialCreditCode: [
           {
             required: true,
             message: "请输入统一社会信用代码",
@@ -138,6 +134,15 @@ export default {
       }
     };
   },
+  mounted() {
+    apiGetCompanyInfo().then(res => {
+      if (res.data.code === "100") {
+        this.formLabelAlign = res.data.content;
+      } else {
+        this.$message.error(res.data.description);
+      }
+    });
+  },
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -145,9 +150,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.formLabelAlign);
+          apiUpdateCompanyInfo(this.formLabelAlign).then(res => {
+            if (res.data.code === "100") {
+              this.$message.success("更新成功");
+            } else {
+              this.$message.error(res.data.description);
+            }
+          });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

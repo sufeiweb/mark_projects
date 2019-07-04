@@ -4,7 +4,12 @@ import { ToThousands } from './ToThousands';
 import { NewToThousands } from './NewToThousands';
 import { SelectCheck } from './SelectCheck';
 import { taskStatus } from './taskStatus';
-import { applyStatus } from './applyStatus';
+import { ApplyStatus } from './ApplyStatus';
+import { Sex } from './Sex';
+import { checkBilltype } from './checkBilltype';
+import { vueTaskStatus } from './vueTaskStatus';
+import { checkHistoryStatus } from './checkHistoryStatus';
+import { TaskDetailStatus } from './TaskDetailStatus';
 
 
 export default {
@@ -14,5 +19,10 @@ export default {
   NewToThousands, // 千分位分割,- 。
   SelectCheck, // select过滤
   taskStatus, // 任务状态
-  applyStatus, // 申请状态
+  ApplyStatus, // 申请状态
+  Sex, // 性别
+  checkBilltype, // 报酬显示
+  vueTaskStatus, // taskDetal vue
+  checkHistoryStatus, // checkHistoryStatus vue
+  TaskDetailStatus, // TaskDetailStatus vue
 }

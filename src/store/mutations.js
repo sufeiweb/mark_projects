@@ -34,5 +34,12 @@ export default {
   },
   [types.SAVE_CONSTANT]: (state, value) => {
     state[value.key] = value.code;
-  }
+  },
+  [types.SAVE_TASK_BILL]: (state, {billType,taskType}) => {
+    state.billType = billType;
+    state.taskType = taskType;
+  },
+  [types.LOGIN_STATUS]: (state, value) => {
+    state.loginStatus = value;
+  },
 }

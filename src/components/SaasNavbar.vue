@@ -64,6 +64,11 @@ export default {
         },
         {
           key: "3",
+          title: "薪金发放",
+          path: "/admin/salary"
+        },
+        {
+          key: "4",
           title: "企业设置",
           path: "/admin/company"
         }
@@ -81,10 +86,10 @@ export default {
   },
   methods: {
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     }
   },
   mounted() {
@@ -95,7 +100,7 @@ export default {
     ) {
       if (this.$router.history.current.path.indexOf("apply/task") > -1) {
         this.initPath = "/admin/apply/task";
-        return
+        return;
       }
       this.initPath = this.$router.history.current.path;
     }
@@ -104,7 +109,7 @@ export default {
     $route(to, from) {
       if (to.path.indexOf("apply/task") > -1) {
         this.initPath = "/admin/apply/task";
-        return
+        return;
       }
       this.initPath = to.path;
     }

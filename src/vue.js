@@ -1,28 +1,21 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './entry/App'
-import router from './router'
+import App from './entry/Vue'
+import router from './router/vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
 import WeVue from 'we-vue'
 import 'we-vue/lib/style.css'
-
-import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-
 import animated from 'animate.css' // npm install animate.css --save安装，再引入
 
 Vue.use(animated)
 
 Vue.use(WeVue)
 Vue.use(ElementUI);
-
-Vue.use(VueQuillEditor)
-
 
 
 Vue.config.productionTip = false
@@ -49,7 +42,12 @@ Vue.config.productionTip = false
 //   jsApiList: ["getLocation"] // 必填，需要使用的JS接口列表
 // });
 
-// saveCookie('access_token', 'cfacdc1f-ae03-468b-be2a-3bdb1c6f628b', 1);
+// function saveCookie(cookieName, cookieValue, cookieDates) {
+//   var d = new Date();
+//   d.setDate(d.getDate() + cookieDates);
+//   document.cookie = cookieName + "=" + cookieValue + ";expires=" + d.toGMTString();
+// }
+// // saveCookie('access_token', 'cfacdc1f-ae03-468b-be2a-3bdb1c6f628b', 1);
 /**
 *路由控制
 *进入路由之后
@@ -72,7 +70,7 @@ router.beforeEach((to, from, next) => {
 });
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: '#vue',
   router,
   store,
   components: { App },

@@ -32,6 +32,9 @@
   </div>
 </template>
 <script>
+import { apiLogin } from "../fetch/AdminApi";
+import AuthProvider from "../fetch/AuthProvider";
+import { sendEvent } from "../utils/util";
 export default {
   data() {
     var validateUsername = (rule, value, callback) => {
@@ -50,6 +53,7 @@ export default {
     };
     return {
       ruleForm: {
+        grant_type: "password",
         username: "",
         password: ""
       },
@@ -64,8 +68,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$router.push('/admin/task')
-          console.log(this.ruleForm);
+          apiLogin(this.ruleForm).then(res => {
+            if (res.status === 200) {
+              this.$router.push("/admin/task");
+            } else {
+              this.$message({
+                message: res.data.description,
+                type: "error"
+              });
+            }
+          });
         } else {
           this.$message({
             message: "请确保数据填写完整",
@@ -82,6 +94,12 @@ export default {
       this.checked = true;
     } else {
       this.checked = false;
+    }
+    if (
+      AuthProvider.getCookie("access_token") &&
+      AuthProvider.getCookie("access_token") !== "wait"
+    ) {
+      this.$router.replace("/admin/task");
     }
   },
   watch: {
