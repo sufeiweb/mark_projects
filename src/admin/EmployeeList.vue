@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="formInline.sex" placeholder="性别" clearable>
-            <el-option label="未知" value="0"></el-option>
+            <el-option label="全部" value="0"></el-option>
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="2"></el-option>
           </el-select>
@@ -44,7 +44,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :current-page="pageInfo.currentPage"
+        :current-page="pageInfo.currentPage + 1"
         :total="pageInfo.totalRecords"
         @current-change="changePage"
       ></el-pagination>
@@ -68,22 +68,22 @@ export default {
     };
   },
   mounted() {
-    this.getApplyUsers(0);
+    this.getApplyUsers(1);
   },
   methods: {
     submitForm(formName) {
-      this.getTaskListData(0);
+      this.getApplyUsers(1);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.getApplyUsers(0);
+      this.getApplyUsers(1);
     },
     getApplyUsers(page) {
       this.searchLoading = true;
       let { formInline, pageInfo } = this;
       let data = {
         ...formInline,
-        page: page || pageInfo.currentPage,
+        page: page || pageInfo.currentPage + 1,
         size: pageInfo.pageSize
       };
       apiGetApplyUsers(data)
@@ -105,8 +105,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.employeelist_main {
-}
 .apply_task_main_pagination {
   width: 100%;
   margin-top: 20px;

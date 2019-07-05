@@ -30,6 +30,18 @@ export function inSetTime(value) {
   value.endTime = value.endTime ? formatTimeAll(value.endTime) : undefined;
   return value;
 }
+export function inSetDataValue(value) {
+  if (value.opDate) {
+    value.opDate = insetDate(value.opDate);
+  }
+  if (value.startTime) {
+    value.startTime = insetDate(value.startTime);
+  }
+  if (value.endTime) {
+    value.endTime = insetDate(value.endTime);
+  }
+  return value;
+}
 
 export const formatTimeAll = (num) => {
   let date = new Date(num);

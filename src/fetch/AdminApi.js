@@ -1,5 +1,5 @@
 import AuthProvider from './AuthProvider';
-import { Axios } from './Axios';
+import { Axios, UploadFile } from './Axios';
 import { API_PATH } from './OriginName';
 import { inTaskData } from "../utils/util";
 
@@ -43,7 +43,8 @@ export const apiGetCompanyInfo = data => {
 
 // admin 获取任务列表
 export const apiGetTaskList = data => {
-  return authsecApi(`/api/authsec/admin/task/tasklist`, data, "POST");
+  let { page, size, ...rest } = data;
+  return authsecApi(`/api/authsec/admin/task/tasklist?page=${page - 1}&size=${size}`, rest, "POST");
 }
 
 // admin 新建任务
@@ -70,12 +71,14 @@ export const apiUpdateTaskDetail = data => {
 
 // admin 获取所有任务申请审核列表
 export const apiAllTaskApplyList = data => {
-  return authsecApi(`/api/authsec/admin/task/apply/users`, data, "POST");
+  let { page, size, ...rest } = data;
+  return authsecApi(`/api/authsec/admin/task/apply/users?page=${page - 1}&size=${size}`, rest, "POST");
 }
 
 // admin 获取指定任务申请审核列表
 export const apiAlongTaskApplyList = data => {
-  return authsecApi(`/api/authsec/admin/task/detail/apply/users`, data, "POST");
+  let { page, size, ...rest } = data;
+  return authsecApi(`/api/authsec/admin/task/detail/apply/users?page=${page - 1}&size=${size}`, rest, "POST");
 }
 
 // admin 任务申请审核列表操作
@@ -89,9 +92,30 @@ export const apiGetTaskBill = data => {
 }
 // admin 获取历史雇员接口
 export const apiGetApplyUsers = data => {
-  return authsecApi(`/api/authsec/admin/task/apply/history/users`, data, "POST");
+  let { page, size, ...rest } = data;
+  return authsecApi(`/api/authsec/admin/task/apply/history/users?page=${page - 1}&size=${size}`, rest, "POST");
 }
 
 export const apiLoginOut = data => {
   return authsecApi(`/api/authsec/user/logout`, data, "GET");
+}
+
+
+export const apiSalayList = data => {
+  let { page, size, ...rest } = data;
+  return authsecApi(`/api/authsec/admin/bill/salary/salarylist?page=${page - 1}&size=${size}`, rest, "POST");
+}
+export const apiUpdateSalayDetail = data => {
+  return authsecApi(`/api/authsec/admin/bill/salary`, data, "PUT");
+}
+export const apiDeleteSalayDetail = data => {
+  return authsecApi(`/api/authsec/admin/bill/salary?id=${data}`, null, "DELETE");
+}
+export const apiGetSalayDetail = data => {
+  return authsecApi(`/api/authsec/admin/bill/salary/detail?id=${data}`, null, "GET");
+}
+export const apiUploadFile = data => {
+  return AuthProvider.getAccessToken().then(token => {
+    return UploadFile(API_PATH + url, { type: 'bearer', value: token }, data)
+  })
 }

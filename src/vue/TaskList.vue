@@ -100,12 +100,12 @@
               <span class="red">不限制</span>
             </span>
             <wv-button
-              v-if="item.applyStatus == -1"
+              v-if="item.applyStatus == -1 || item.applyStatus == 3"
               type="primary"
               @click.stop="optionTask(item.id,1)"
               :mini="true"
             >申请</wv-button>
-            <wv-button v-else type="primary" :mini="true">{{item.applyStatus | ApplyStatus}}</wv-button>
+            <span v-else class="task_status_color">{{item.applyStatus | ApplyStatus}}</span>
           </div>
         </div>
       </div>
@@ -123,13 +123,12 @@
   </div>
 </template>
 <script>
-import { getUrlParam, APPID, inSetTime } from "../utils/util";
+import { inSetTime } from "../utils/util";
 import {
-  apiVueCheckCode,
   apiVueTaskList,
-  apiVueTaskOption
+  apiVueTaskOption,
+  apiGetTaskBill
 } from "../fetch/VueApi";
-import { apiLogin, apiGetTaskBill } from "../fetch/AdminApi";
 import { mapGetters } from "vuex";
 import { getCookie } from "../utils/util";
 import MvHeader from "../components/Mv_header";
@@ -178,19 +177,19 @@ export default {
   components: {
     MvHeader
   },
-  created() {
-    this.getCode();
+  mounted() {
+    this.getTaskListData(1);
   },
   methods: {
     loadMore() {
       let {
         pageInfo: { totalRecords, pageSize, currentPage }
       } = this;
-      let newTotal = pageSize * (currentPage + 1);
+      let newTotal = pageSize * (currentPage + 2);
       let chaTotal = totalRecords - newTotal;
       if (chaTotal > 0) {
-        this.currentPageOp = currentPage + 1;
-        this.getTaskListData(currentPage + 1, "push");
+        this.currentPageOp = currentPage + 2;
+        this.getTaskListData(currentPage + 2, "push");
       } else {
         this.load_more_text = "没有更多任务了";
       }
@@ -200,7 +199,7 @@ export default {
       apiVueTaskOption(data).then(res => {
         if (res.data.code === "100") {
           this.pageInfo.pageSize = this.currentPageOp * this.pageInfo.pageSize;
-          this.getTaskListData(0);
+          this.getTaskListData(1);
         } else {
           Toast.text(res.data.description);
         }
@@ -233,72 +232,15 @@ export default {
     showModal() {
       this.showSerchModal = true;
     },
-    getCode() {
-      if (!getCookie("access_token") || getCookie("access_token") == "wait") {
-        const code = getUrlParam("code");
-        const local = window.location.href;
-        if (code == null || code === "") {
-          window.location.href =
-            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-            APPID +
-            "&redirect_uri=" +
-            encodeURIComponent(local) +
-            "&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
-          // this.checkCode(code);
-        } else {
-          this.checkCode(code);
-        }
-      } else {
-        this.getTaskListData(0);
-      }
-    },
-    checkCode(code) {
-      let _this = this;
-      // let params = {
-      //   grant_type: "password",
-      //   username: "18817847709",
-      //   password: "abcd1234"
-      // };
-      // apiLogin(params).then(res => {
-      //   if (res.status === 200) {
-      //     _this.getTaskListData(0);
-      //   } else {
-      //     Toast.text("登录失败,请刷新重试");
-      //   }
-      // });
-      apiVueCheckCode(code).then(res => {
-        if (res.data.code === "100") {
-          // 处理登录；
-          let { name } = res.data.content;
-          let params = {
-            grant_type: "password",
-            username: name,
-            password: "abcd1234"
-          };
-          apiLogin(params).then(res => {
-            if (res.status === 200) {
-              _this.getTaskListData(0);
-            } else {
-              Toast.text('登录失败,请刷新重试')
-            }
-          });
-        } else if (res.data.code === "01001404") {
-          let { openId } = res.data.content;
-          _this.$router.replace("/vue/register/" + openId);
-        } else {
-          Toast.text(res.data.description);
-        }
-      });
-    },
     submitForm(formName) {
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     resetForm() {
       this.formInline = {};
       this.sexValue = [];
       this.typeValue = [];
       this.billValue = [];
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     getTaskListData(page, type) {
       if (JSON.stringify(this.BillType) === "[]") {
@@ -311,8 +253,8 @@ export default {
       this.searchLoading = true;
       let { formInline, pageInfo } = this;
       let data = {
-        ...inSetTime(formInline),
-        page: page || pageInfo.currentPage,
+        ...formInline,
+        page: page || pageInfo.currentPage + 1,
         size: pageInfo.pageSize || 5
       };
       apiVueTaskList(data).then(res => {

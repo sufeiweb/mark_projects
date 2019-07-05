@@ -56,7 +56,8 @@ import {
   apiLogin,
   apiUpdateUserInfo,
   apiGetUserInfoDetail
-} from "../fetch/AdminApi";
+} from "../fetch/VueApi";
+
 import { md5Mobile, insetDate, fullZero } from "../utils/util";
 import { Toast, Dialog } from "we-vue";
 import MvHeader from "../components/Mv_header";

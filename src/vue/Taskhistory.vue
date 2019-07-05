@@ -88,7 +88,7 @@
         <div class="content_item_header task_line">
           <span class="task_addres">地点：{{item.limitAddress ? item.address :' 无限制' }}</span>
         </div>
-        <div class="content_item_header">
+        <div class="content_item_header content_item_header_footer">
           <span class="task_user">发布人：{{item.ownerName || '--'}}</span>
           <div class="task_option">
             <span class="task_people" v-if="item.totalPeople>0">
@@ -99,7 +99,7 @@
               人数：
               <span class="red">不限制</span>
             </span>
-            <button class="weui-vcode-btn">{{item.status | checkHistoryStatus}}</button>
+            <span class="task_status_color">{{item.applyStatus | ApplyStatus}}</span>
           </div>
         </div>
       </div>
@@ -166,24 +166,22 @@ export default {
     MvHeader
   },
   mounted() {
-    this.getTaskListData(0);
+    this.getTaskListData(1);
   },
   methods: {
     loadMore() {
       let {
         pageInfo: { totalRecords, pageSize, currentPage }
       } = this;
-      let newTotal = pageSize * (currentPage + 1);
+      let newTotal = pageSize * (currentPage + 2);
       let chaTotal = totalRecords - newTotal;
       if (chaTotal > 0) {
-        this.getTaskListData(currentPage + 1, "push");
+        this.getTaskListData(currentPage + 2, "push");
       } else {
         this.load_more_text = "没有更多历史任务了";
       }
     },
     go2TaskDetail(id) {
-      console.log(id);
-      console.log("查看任务");
       this.$router.push("/vue/home/taskdetail/" + id);
     },
     confirmSex(picker, value) {
@@ -211,21 +209,21 @@ export default {
       this.showSerchModal = true;
     },
     submitForm(formName) {
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     resetForm() {
       this.formInline = {};
       this.sexValue = [];
       this.typeValue = [];
       this.billValue = [];
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     getTaskListData(page, type) {
       this.searchLoading = true;
       let { formInline, pageInfo } = this;
       let data = {
-        ...inSetTime(formInline),
-        page: page || pageInfo.currentPage,
+        ...formInline,
+        page: page || pageInfo.currentPage + 1,
         size: pageInfo.pageSize
       };
       apiVueTaskHistoryList(data).then(res => {
@@ -236,7 +234,7 @@ export default {
           } else {
             this.list = res.data.content;
           }
-          if (res.data.content || !res.data.content.length) {
+          if (!res.data.content || !res.data.content.length) {
             Toast.text("暂无数据！");
           }
         } else {
@@ -341,6 +339,9 @@ export default {
   }
   .red {
     color: red;
+  }
+   .content_item_header_footer {
+    font-size: 14px;
   }
 }
 </style>

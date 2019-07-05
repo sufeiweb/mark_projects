@@ -42,19 +42,19 @@
         </section>
         <section class="card_item">
           <span class="card_item_title">状态</span>
-          <div class="card_item_content">{{taskDetal.status | vueTaskStatus}}</div>
+          <div class="card_item_content">{{taskDetal.applyStatus | ApplyStatus}}</div>
         </section>
         <section class="card_item card_item_btn">
           <wv-button @click="goback" type="primary" :plain="true" :mini="true">返回</wv-button>
           <wv-button
-            v-if="taskDetal.status == 1"
-            @click="optionTask(taskDetal.id,1)"
+            v-if="taskDetal.applyStatus == 0"
+            @click="optionTask(taskDetal.id,2)"
             type="primary"
             :mini="true"
           >撤销申请</wv-button>
           <wv-button
-            v-if="taskDetal.status == 0 || taskDetal.status == 3"
-            @click="optionTask(taskDetal.id,2)"
+            v-if="taskDetal.applyStatus == -1 || taskDetal.applyStatus == 3"
+            @click="optionTask(taskDetal.id,1)"
             type="primary"
             :mini="true"
           >申请</wv-button>
@@ -65,8 +65,7 @@
 </template>
 <script>
 import { getUrlParam } from "../utils/util";
-import { apiVueTaskDetail, apiVueTaskOption } from "../fetch/VueApi";
-import { apiLogin } from "../fetch/AdminApi";
+import { apiVueTaskDetail, apiVueTaskOption, apiLogin } from "../fetch/VueApi";
 import { mapGetters } from "vuex";
 import MvHeader from "../components/Mv_header";
 import { Toast } from "we-vue";

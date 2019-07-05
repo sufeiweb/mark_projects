@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="formInline.sex" placeholder="请选择性别">
-            <el-option label="不限制" value="0"></el-option>
+            <el-option label="全部" value="0"></el-option>
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="2"></el-option>
           </el-select>
@@ -44,8 +44,8 @@
         v-if="multipleSelection.length"
         class="apply_task_main_pagination apply_task_main_footer"
       >
-        <el-button size="small" type="primary" plain @click.stop="acceptApply(null,null,'all')">接受</el-button>
-        <el-button size="small" type="danger" plain @click.stop="rejectApply(null,null,'all')">拒绝</el-button>
+        <el-button size="small" type="primary" plain @click.stop="acceptApply">接受</el-button>
+        <el-button size="small" type="danger" plain @click.stop="rejectApply">拒绝</el-button>
       </div>
     </transition>
     <div class="apply_task_main_table">
@@ -94,7 +94,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :current-page="pageInfo.currentPage"
+        :current-page="pageInfo.currentPage + 1"
         :total="pageInfo.totalRecords"
         @current-change="changePage"
       ></el-pagination>
@@ -105,7 +105,8 @@
 import {
   apiAllTaskApplyList,
   apiAlongTaskApplyList,
-  apiGetTaskDetail
+  apiGetTaskDetail,
+  apiTaskApplyOpreation
 } from "../fetch/AdminApi";
 export default {
   data() {
@@ -126,26 +127,65 @@ export default {
   mounted() {
     // 根据是否有id 来判断 业务类型 加载全部还是加载部分
     this.applyId = this.$route.params.id;
-    this.getTaskApplyList(0, this.$route.params.id);
+    this.getTaskApplyList(1, this.$route.params.id);
   },
   methods: {
     submitForm(formName) {
-      this.getTaskApplyList(0, this.applyId);
+      this.getTaskApplyList(1, this.applyId);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.getTaskApplyList(0, this.applyId);
+      this.getTaskApplyList(1, this.applyId);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    acceptApply(status, id, type) {
+    acceptApply(id) {
       // 接受apply
-      console.log(status, id, type);
+      let params = {
+        type: 1
+      };
+      params.ids = id ? [id] : this.multipleSelection;
+      apiTaskApplyOpreation(params).then(res => {
+        if (res.data.code === "100") {
+          if (id) {
+            this.$message.success("接受申请成功");
+          } else {
+            this.$message.success("批量接受申请成功");
+          }
+          this.getTaskApplyList(this.pageInfo.currentPage + 1, this.applyId);
+        } else {
+          this.$message.error(res.data.description);
+        }
+      });
     },
-    rejectApply(status, id, type) {
+    rejectApply(id) {
       // 拒绝apply
-      console.log(status, id, type);
+      this.$confirm("确认拒绝？")
+        .then(_ => {
+          let params = {
+            type: 1
+          };
+          params.ids = id ? [id] : this.multipleSelection;
+          apiTaskApplyOpreation(params).then(res => {
+            if (res.data.code === "100") {
+              if (id) {
+                this.$message.success("拒绝申请成功");
+              } else {
+                this.$message.success("批量拒绝申请成功");
+              }
+              this.getTaskApplyList(
+                this.pageInfo.currentPage + 1,
+                this.applyId
+              );
+            } else {
+              this.$message.error(res.data.description);
+            }
+          });
+        })
+        .catch(_ => {
+          this.$message.info("取消拒绝操作");
+        });
     },
     changePage(e) {
       this.getTaskApplyList(e, this.applyId);
@@ -154,7 +194,7 @@ export default {
       let { formInline, pageInfo } = this;
       let data = {
         ...formInline,
-        page: page || pageInfo.currentPage,
+        page: page || pageInfo.currentPage + 1,
         size: pageInfo.pageSize,
         taskId: id
       };

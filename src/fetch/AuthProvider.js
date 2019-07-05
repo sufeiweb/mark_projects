@@ -1,6 +1,6 @@
 import { Axios } from './Axios';
 
-import { sendEvent, login401 } from '../utils/util';
+import { sendEvent } from '../utils/util';
 
 
 import { API_PATH } from './OriginName';
@@ -53,7 +53,7 @@ class AuthProvider {
         this.deleteCookie('access_token');
         this.deleteCookie('refresh_token');
         this.deleteCookie('webclient_id');
-        login401();
+        sendEvent('ADMIN_LOGIN_401', "VUE_LOGIN_401");
       })
   }
 

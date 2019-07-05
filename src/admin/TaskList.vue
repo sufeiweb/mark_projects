@@ -148,7 +148,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :current-page="pageInfo.currentPage"
+        :current-page="pageInfo.currentPage + 1"
         :total="pageInfo.totalRecords"
         @current-change="changePage"
       ></el-pagination>
@@ -185,15 +185,15 @@ export default {
     };
   },
   mounted() {
-    this.getTaskListData(0);
+    this.getTaskListData(1);
   },
   methods: {
     submitForm(formName) {
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.getTaskListData(0);
+      this.getTaskListData(1);
     },
     editTask(type, id) {
       // 编辑
@@ -207,7 +207,7 @@ export default {
       apiCancelTask({ id, type: 1 }).then(res => {
         if (res.data.code === "100") {
           this.$message.success("发布成功");
-          this.getTaskListData(this.pageInfo.currentPage);
+          this.getTaskListData(this.pageInfo.currentPage + 1);
         } else {
           this.$message.error(res.data.description);
         }
@@ -224,7 +224,7 @@ export default {
           apiCancelTask({ id, type: 2 }).then(res => {
             if (res.data.code === "100") {
               this.$message.success("取消发布成功");
-              this.getTaskListData(this.pageInfo.currentPage);
+              this.getTaskListData(this.pageInfo.currentPage + 1);
             } else {
               this.$message.error(res.data.description);
             }
@@ -248,7 +248,7 @@ export default {
           apiDeleteTask(id).then(res => {
             if (res.data.code === "100") {
               this.$message.success("删除成功");
-              this.getTaskListData(this.pageInfo.currentPage);
+              this.getTaskListData(this.pageInfo.currentPage + 1);
             } else {
               this.$message.error(res.data.description);
             }
@@ -306,9 +306,10 @@ export default {
     getTaskListData(page) {
       this.searchLoading = true;
       let { formInline, pageInfo } = this;
+      let formValue = { ...formInline };
       let data = {
-        ...inSetTime(formInline),
-        page: page || pageInfo.currentPage,
+        ...inSetTime(formValue),
+        page: page || pageInfo.currentPage + 1,
         size: pageInfo.pageSize
       };
       apiGetTaskList(data)

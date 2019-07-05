@@ -13,6 +13,9 @@ export const ApplyStatus = (val) => {
     case '2':
     case 2:
       return '已拒绝';
+    case '3':
+    case 3:
+      return '已取消申请';
       default:
       return "未知"
   }

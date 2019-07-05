@@ -42,14 +42,18 @@ export default {
       this.$router.history.current &&
       this.$router.history.current.path
     ) {
-      if (this.$router.history.current.path.indexOf("vue/user") > -1) {
+      let newPath = this.$router.history.current.path;
+      if (newPath.indexOf("vue/user") > -1) {
         this.active = false;
-      } else if (this.$router.history.current.path.indexOf("vue/home") > -1) {
+      } else if (newPath.indexOf("vue/home") > -1) {
         this.active = true;
       }
-      if (this.$router.history.current.path.indexOf("vue/register") > -1) {
+      if (
+        newPath.indexOf("vue/register") > -1 ||
+        newPath.indexOf("vue/start") > -1
+      ) {
         this.showFooter = false;
-      } else if (this.$router.history.current.path.indexOf("admin") == -1) {
+      } else if (newPath.indexOf("admin") == -1) {
         this.showFooter = true;
       }
     }
@@ -120,6 +124,7 @@ a {
   justify-content: center;
   color: #999;
 }
+.task_status_color,
 .btn_footer.activeColor {
   color: #00d69e;
 }

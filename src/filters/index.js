@@ -10,6 +10,7 @@ import { checkBilltype } from './checkBilltype';
 import { vueTaskStatus } from './vueTaskStatus';
 import { checkHistoryStatus } from './checkHistoryStatus';
 import { TaskDetailStatus } from './TaskDetailStatus';
+import { salayType } from './salayType';
 
 
 export default {
@@ -25,4 +26,5 @@ export default {
   vueTaskStatus, // taskDetal vue
   checkHistoryStatus, // checkHistoryStatus vue
   TaskDetailStatus, // TaskDetailStatus vue
+  salayType, // salayType vue 薪金类型
 }

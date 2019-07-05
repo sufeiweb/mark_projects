@@ -49,8 +49,7 @@
   </div>
 </template>
 <script>
-import { apiLoginSmsCode, apiLogin } from "../fetch/AdminApi";
-import { apiVueRegister } from "../fetch/VueApi";
+import { apiVueRegister,apiLogin,apiLoginSmsCode } from "../fetch/VueApi";
 import { md5Mobile, insetDate, fullZero } from "../utils/util";
 import { Toast } from "we-vue";
 export default {
@@ -223,8 +222,6 @@ export default {
             apiLogin(params).then(res => {
               if (res.status === 200) {
                 this.$router.replace("/vue/home");
-              } else {
-                Toast.text("注册失败");
               }
             });
           } else {

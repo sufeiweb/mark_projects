@@ -1,6 +1,6 @@
 <template>
   <div class="user_main layout_mv">
-    <MvHeader :showBack="false"/>
+    <MvHeader :showBack="false" />
     <div class="user_main_content">
       <wv-panel class="content_item">
         <wv-cell class="content_item_box" title="个人中心" is-link to="/vue/user/info">
@@ -14,14 +14,13 @@
         <wv-cell class="content_item_box" title="设置" is-link to="/vue/user/setting">
           <i class="el-icon-s-tools cell-icon i_code_class" slot="icon"></i>
         </wv-cell>
-      </wv-panel> -->
+      </wv-panel>-->
     </div>
   </div>
 </template>
 <script>
 import { getUrlParam } from "../utils/util";
-import { apiVueTaskDetail } from "../fetch/VueApi";
-import { apiLogin } from "../fetch/AdminApi";
+import { apiVueTaskDetail, apiLogin } from "../fetch/VueApi";
 import { mapGetters } from "vuex";
 import MvHeader from "../components/Mv_header";
 import { Toast } from "we-vue";

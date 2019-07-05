@@ -249,7 +249,7 @@ export default {
         map.clearOverlays();
         function myFun() {
           //获取第一个智能搜索的结果
-          th.userlocation = local.getResults().getPoi(0).point;
+          th.userlocation = local.getResults().getPoi(1).point;
           _this.editTask.latitude = th.userlocation.lat;
           _this.editTask.longitude = th.userlocation.lng;
           map.centerAndZoom(th.userlocation, 18);

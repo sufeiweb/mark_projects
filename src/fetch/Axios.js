@@ -74,3 +74,17 @@ export function Axios(url, token, data, type) {
     })
   })
 }
+
+export function UploadFile(url, token, data) {
+  return new Promise((resolve, reject) => {
+    axios.defaults.headers['Content-Type'] = 'multipart/form-data';
+    if (token != null) {
+      axios.defaults.headers['Authorization'] = `${token.type} ${token.value}`;
+    }
+    axios.post(url, data).then(res => {
+      resolve(res);
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
